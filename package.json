@@ -1,0 +1,11 @@
+{
+  "name": "tech-assigment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "author": "Amir Imani",
+  "license": "ISC"
+}
