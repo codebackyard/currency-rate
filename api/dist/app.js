@@ -23,7 +23,7 @@ app.use(compression_1.default());
 app.use(body_parser_1.default.json());
 //app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/good', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.body = 'good';
+    res.json({ ok: 'ok' });
 }));
 exports.default = app;
 //# sourceMappingURL=app.js.map

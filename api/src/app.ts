@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/good', async (req: express.Request, res: express.Response) => {
-  res.body = 'good';
+  res.json({ ok: 'ok' });
 });
 
 export default app;
