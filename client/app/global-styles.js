@@ -1,6 +1,8 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
+  import 'typeface-roboto';
+
   html,
   body {
     height: 100%;
