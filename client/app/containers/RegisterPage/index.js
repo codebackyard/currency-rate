@@ -19,16 +19,31 @@ import Typography from '@material-ui/core/Typography';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectRegisterPage from './selectors';
+import makeSelectRegisterPage, {
+  makeSelectEmail,
+  makeSelectPassword,
+  makeSelectPasswordConf,
+} from './selectors';
+import {
+  register,
+  inputEmailChanged,
+  inputPasswordChanged,
+  inputPasswordConfChanged,
+} from './actions';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 
-import { Wrapper, Card, FormRow, TextField } from './styled';
+import { Wrapper, Card, CardHeader, FormRow, TextField } from './styled';
 
-export function RegisterPage() {
+export function RegisterPage({ dispatch, register }) {
   useInjectReducer({ key: 'registerPage', reducer });
   useInjectSaga({ key: 'registerPage', saga });
+
+  const formSubmit = e => {
+    e.preventDefault();
+    register();
+  };
 
   return (
     <div>
@@ -38,26 +53,54 @@ export function RegisterPage() {
       </Helmet>
       <Wrapper>
         <Card>
-          <form noValidate>
+          <CardHeader>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Currency Rate
+            </Typography>
+          </CardHeader>
+          <form noValidate onSubmit={formSubmit}>
             <Grid container>
               <Grid item xs={12}>
                 <FormRow>
-                  <TextField label="Email" />
+                  <TextField
+                    label="Email"
+                    onChange={e =>
+                      dispatch(inputEmailChanged({ email: e.target.value }))
+                    }
+                  />
                 </FormRow>
               </Grid>
               <Grid item xs={12}>
                 <FormRow>
-                  <TextField label="Password" />
+                  <TextField
+                    label="Password"
+                    type="password"
+                    onChange={e =>
+                      dispatch(
+                        inputPasswordChanged({ password: e.target.value }),
+                      )
+                    }
+                  />
                 </FormRow>
               </Grid>
               <Grid item xs={12}>
                 <FormRow>
-                  <TextField label="Password Confirmation" />
+                  <TextField
+                    label="Password Confirmation"
+                    type="password"
+                    onChange={e =>
+                      dispatch(
+                        inputPasswordConfChanged({
+                          passwordConf: e.target.value,
+                        }),
+                      )
+                    }
+                  />
                 </FormRow>
               </Grid>
               <Grid item xs={12}>
                 <FormRow>
-                  <Button variant="contained" color="primary">
+                  <Button variant="contained" color="primary" type="submit">
                     Register
                   </Button>
                   <Button
@@ -83,11 +126,15 @@ RegisterPage.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   registerPage: makeSelectRegisterPage(),
+  email: makeSelectEmail(),
+  password: makeSelectPassword(),
+  passwordConf: makeSelectPasswordConf(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
+    register: () => dispatch(register()),
   };
 }
 
