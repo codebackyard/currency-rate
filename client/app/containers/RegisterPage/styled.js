@@ -7,6 +7,11 @@ export const Card = styled(CardUI)`
   min-width: 300px;
 `;
 
+export const CardHeader = styled.div`
+  padding: 15px;
+  padding-bottom: 0;
+`;
+
 export const Wrapper = styled.div`
   display: flex;
   align-items: center;
