@@ -19,22 +19,35 @@ import Typography from '@material-ui/core/Typography';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectLoginPage from './selectors';
+import makeSelectLoginPage, {
+  makeSelectLoginEmail,
+  makeSelectLoginPassword,
+} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
+import {
+  loginRequest,
+  inputEmailChanged,
+  inputPasswordChanged,
+} from './actions';
 
 import { Wrapper, Card, TextField, FormRow, CardHeader } from './styled';
 
-export function LoginPage() {
+export function LoginPage({ login, dispatch, email, password }) {
   useInjectReducer({ key: 'loginPage', reducer });
   useInjectSaga({ key: 'loginPage', saga });
+
+  const formSubmit = e => {
+    e.preventDefault();
+    login();
+  };
 
   return (
     <div>
       <Helmet>
         <title>Login</title>
-        <meta name="description" content="Login to currency rate profile" />
+        <meta name="description" content="Login to Currency Rate profile" />
       </Helmet>
       <Wrapper>
         <Card>
@@ -43,21 +56,43 @@ export function LoginPage() {
               Currency Rate
             </Typography>
           </CardHeader>
-          <form noValidate>
+          <form onSubmit={formSubmit} noValidate>
             <Grid container>
               <Grid item xs={12}>
                 <FormRow>
-                  <TextField label="Email" />
+                  <TextField
+                    label="Email"
+                    value={email}
+                    onChange={e =>
+                      dispatch(inputEmailChanged({ email: e.target.value }))
+                    }
+                  />
                 </FormRow>
               </Grid>
               <Grid item xs={12}>
                 <FormRow>
-                  <TextField label="Password" />
+                  <TextField
+                    label="Password"
+                    value={password}
+                    type="password"
+                    onChange={e =>
+                      dispatch(
+                        inputPasswordChanged({
+                          password: e.target.value,
+                        }),
+                      )
+                    }
+                  />
                 </FormRow>
               </Grid>
               <Grid item xs={12}>
                 <FormRow>
-                  <Button variant="contained" color="primary">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    onClick={formSubmit}
+                  >
                     Login
                   </Button>
                   <Button
@@ -79,15 +114,19 @@ export function LoginPage() {
 
 LoginPage.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
   loginPage: makeSelectLoginPage(),
+  email: makeSelectLoginEmail(),
+  password: makeSelectLoginPassword(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
+    login: () => dispatch(loginRequest()),
   };
 }
 
