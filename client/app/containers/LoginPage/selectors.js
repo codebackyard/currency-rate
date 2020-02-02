@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { get } from 'lodash';
 import { initialState } from './reducer';
 
 /**
@@ -11,6 +12,11 @@ const selectLoginPageDomain = state => state.loginPage || initialState;
  * Other specific selectors
  */
 
+const selectLoginEmail = state =>
+  get(state, 'loginPage.email', initialState.email);
+const selectLoginPassword = state =>
+  get(state, 'loginPage.password', initialState.password);
+
 /**
  * Default selector used by LoginPage
  */
@@ -18,6 +24,18 @@ const selectLoginPageDomain = state => state.loginPage || initialState;
 const makeSelectLoginPage = () =>
   createSelector(
     selectLoginPageDomain,
+    substate => substate,
+  );
+
+export const makeSelectLoginEmail = () =>
+  createSelector(
+    selectLoginEmail,
+    substate => substate,
+  );
+
+export const makeSelectLoginPassword = () =>
+  createSelector(
+    selectLoginPassword,
     substate => substate,
   );
 
