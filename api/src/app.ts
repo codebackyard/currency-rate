@@ -8,6 +8,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms')
 );
+g;
 
 app.use(compression());
 app.use(bodyParser.json());

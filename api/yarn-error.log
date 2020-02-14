@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/bin/node /usr/bin/yarn add crypto @types/crypto
+  /usr/bin/node /usr/bin/yarn add passport @types/passport passport-local @typed/passport-local
 
 PATH: 
   /home/amir/.rvm/gems/ruby-2.6.3/bin:/home/amir/.rvm/gems/ruby-2.6.3@global/bin:/home/amir/.rvm/rubies/ruby-2.6.3/bin:/home/amir/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/var/lib/snapd/snap/bin:/home/amir/.rvm/bin
@@ -14,7 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fcrypto: Not found
+  Error: https://registry.yarnpkg.com/@typed%2fpassport-local: Not found
       at Request.params.callback [as _callback] (/usr/lib/node_modules/yarn/lib/cli.js:66947:18)
       at Request.self.callback (/usr/lib/node_modules/yarn/lib/cli.js:140665:22)
       at Request.emit (events.js:219:5)
@@ -45,16 +45,20 @@ npm manifest:
     "author": "Amir Imani",
     "license": "ISC",
     "dependencies": {
+      "@types/bcrypt-nodejs": "^0.0.31",
       "@types/compression": "^1.0.1",
       "@types/errorhandler": "^0.0.32",
+      "@types/express-validator": "^3.0.0",
       "@types/mongoose": "^5.7.1",
       "@types/morgan": "^1.7.37",
       "@types/node": "^13.5.2",
+      "bcrypt-nodejs": "^0.0.3",
       "body-parser": "^1.19.0",
       "compression": "^1.7.4",
       "errorhandler": "^1.5.1",
       "express": "^4.17.1",
       "express-session": "^1.17.0",
+      "express-validator": "^6.4.0",
       "global": "^4.4.0",
       "mongoose": "^5.9.0",
       "morgan": "^1.9.1",
@@ -86,6 +90,11 @@ Lockfile:
       chalk "^2.0.0"
       esutils "^2.0.2"
       js-tokens "^4.0.0"
+  
+  "@types/bcrypt-nodejs@^0.0.31":
+    version "0.0.31"
+    resolved "https://registry.yarnpkg.com/@types/bcrypt-nodejs/-/bcrypt-nodejs-0.0.31.tgz#c2912b47e66242f2d0d2c43cdd62918c8f990dac"
+    integrity sha512-0J4tuZnKpVyHc5EIKTeIUIo6yBSjt7F004mifvqGPAQsETho7iHubjyBD8p1YENNWNYb1vfPhgjCsRH8zy84XQ==
   
   "@types/body-parser@*":
     version "1.17.1"
@@ -130,6 +139,13 @@ Lockfile:
     dependencies:
       "@types/node" "*"
       "@types/range-parser" "*"
+  
+  "@types/express-validator@^3.0.0":
+    version "3.0.0"
+    resolved "https://registry.yarnpkg.com/@types/express-validator/-/express-validator-3.0.0.tgz#e6f3cab842e5ae376a1cfa11295202ec380b68d1"
+    integrity sha512-LusnB0YhTXpBT25PXyGPQlK7leE1e41Vezq1hHEUwjfkopM1Pkv2X2Ppxqh9c+w/HZ6Udzki8AJotKNjDTGdkQ==
+    dependencies:
+      express-validator "*"
   
   "@types/express@*":
     version "4.17.2"
@@ -224,6 +240,11 @@ Lockfile:
     integrity sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==
     dependencies:
       safe-buffer "5.1.2"
+  
+  bcrypt-nodejs@^0.0.3:
+    version "0.0.3"
+    resolved "https://registry.yarnpkg.com/bcrypt-nodejs/-/bcrypt-nodejs-0.0.3.tgz#c60917f26dc235661566c681061c303c2b28842b"
+    integrity sha1-xgkX8m3CNWYVZsaBBhwwPCsohCs=
   
   bl@^2.2.0:
     version "2.2.0"
@@ -461,6 +482,14 @@ Lockfile:
       safe-buffer "5.2.0"
       uid-safe "~2.1.5"
   
+  express-validator@*, express-validator@^6.4.0:
+    version "6.4.0"
+    resolved "https://registry.yarnpkg.com/express-validator/-/express-validator-6.4.0.tgz#634f96b60d53112409e270c038ab818a36f56e47"
+    integrity sha512-Fs+x0yDOSiUV+o5jIRloMyBxqpSzJiMM8KQW1IRVv2l49F6ATU0F9uPa+3K6vXNlLlhUjauv2FCGLFPMaNr24w==
+    dependencies:
+      lodash "^4.17.15"
+      validator "^12.1.0"
+  
   express@^4.17.1:
     version "4.17.1"
     resolved "https://registry.yarnpkg.com/express/-/express-4.17.1.tgz#4491fc38605cf51f8629d39c2b5d026f98a4c134"
@@ -624,6 +653,11 @@ Lockfile:
     version "2.3.1"
     resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.3.1.tgz#def12d9c941017fabfb00f873af95e9c99e1be87"
     integrity sha512-l3hLhffs9zqoDe8zjmb/mAN4B8VT3L56EUvKNqLFVs9YlFA+zx7ke1DO8STAdDyYNkeSo1nKmjuvQeI12So8Xw==
+  
+  lodash@^4.17.15:
+    version "4.17.15"
+    resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
+    integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
   
   media-typer@0.3.0:
     version "0.3.0"
@@ -1062,6 +1096,11 @@ Lockfile:
     version "1.0.1"
     resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
     integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
+  
+  validator@^12.1.0:
+    version "12.2.0"
+    resolved "https://registry.yarnpkg.com/validator/-/validator-12.2.0.tgz#660d47e96267033fd070096c3b1a6f2db4380a0a"
+    integrity sha512-jJfE/DW6tIK1Ek8nCfNFqt8Wb3nzMoAbocBF6/Icgg1ZFSBpObdnwVY2jQj6qUqzhx5jc71fpvBWyLGO7Xl+nQ==
   
   vary@~1.1.2:
     version "1.1.2"
