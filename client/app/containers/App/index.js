@@ -10,10 +10,12 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import HomePage from 'containers/HomePage/Loadable';
+import { get } from 'lodash';
+
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
-import LoginPage from 'containers/LoginPage/Loadable';
-import RegisterPage from 'containers/RegisterPage/Loadable';
+
+import PrivateRoute from 'utils/privateRoute';
+import Routes from '../../routes';
 
 import GlobalStyle from '../../global-styles';
 
@@ -21,9 +23,18 @@ export default function App() {
   return (
     <div>
       <Switch>
-        <Route exact path="/register" component={RegisterPage} />
-        <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/" component={HomePage} />
+        {Object.values(Routes).map(route => {
+          const Wrapper = route.private ? PrivateRoute : Route;
+
+          return (
+            <Wrapper
+              key={route.path}
+              exact={get(route, 'exact', true)}
+              path={route.path}
+              component={route.component}
+            />
+          );
+        })}
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />
