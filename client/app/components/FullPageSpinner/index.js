@@ -11,11 +11,22 @@ import React, { memo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 function FullPageSpinner() {
   return (
-    <div>
-      <FormattedMessage {...messages.header} />
-    </div>
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    ></div>
   );
 }
 
