@@ -18,9 +18,10 @@ export function loginRequest() {
   };
 }
 
-export function loginSucceed() {
+export function loginSucceed({ user }) {
   return {
     type: Actions.LOGIN.SUCCEED,
+    user,
   };
 }
 
