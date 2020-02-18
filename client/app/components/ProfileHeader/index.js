@@ -132,7 +132,7 @@ function ProfileHeader({ currencies, addCurrency, removeCurrency }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap className={classes.title}>
-            Material-UI
+            Currency Rate
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -155,7 +155,6 @@ function ProfileHeader({ currencies, addCurrency, removeCurrency }) {
                     ...params.inputProps,
                   }}
                   ref={params.InputProps.ref}
-                  autoFocus
                   className={classes.inputBase}
                   classes={{
                     root: classes.inputRoot,

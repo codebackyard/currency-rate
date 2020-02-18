@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -13,47 +13,73 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
 // @framer-motion
-import { motion } from 'framer-motion';
+import { motion, useCycle } from 'framer-motion';
 
 // @material
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Skeleton from '@material-ui/lab/Skeleton';
+
 import IconButton from '@material-ui/core/IconButton';
+import ArrowBack from '@material-ui/icons/ArrowBack';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
 import CommentIcon from '@material-ui/icons/Comment';
 import Checkbox from '@material-ui/core/Checkbox';
+import Typography from '@material-ui/core/Typography';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 
 import ProfileHeader from 'components/ProfileHeader';
+import ProfileCurrencyItem from 'components/ProfileCurrencyItem';
 
 import makeSelectProfilePage from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import { useAuth } from '../../context/auth-context';
 
-const useStyles = makeStyles({
-  wrapper: {},
+const useStyles = makeStyles(theme => ({
+  body: {
+    marginTop: 26,
+  },
   card: {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-    position: 'fixed',
     bottom: 0,
-    right: '20%',
+    right: 0,
+    left: 0,
     top: 100,
     width: '100%',
     maxWidth: 600,
+    overflowY: 'auto',
+
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
   },
   cardContent: {},
+  skeleton: {
+    marginBottom: 10,
+    height: 50,
+    '&:last-child': {
+      marginBottom: 0,
+    },
+  },
+}));
+
+const theme = createMuiTheme({
+  typography: {
+    bold: {
+      fontSize: 10,
+      fontWeight: 900,
+    },
+  },
 });
 
 const CURRENCIES = [
@@ -65,23 +91,59 @@ const CURRENCIES = [
   { id: 6, title: 'BTC', rate: 7670 },
 ];
 
+function ListItemLoader(props) {
+  return <Skeleton animation="wave" variant="rect" {...props} />;
+}
+
+const cardHeaderVariants = {
+  hide: {
+    y: -50,
+    height: 0,
+  },
+  show: {
+    y: 0,
+    height: 72,
+  },
+};
+
+const backBtnVariants = {
+  hide: {
+    y: -120,
+    height: 0,
+    opacity: 0,
+  },
+  show: {
+    y: 0,
+    height: 72,
+    opacity: 1,
+  },
+};
+
 export function ProfilePage() {
   useInjectReducer({ key: 'profilePage', reducer });
   useInjectSaga({ key: 'profilePage', saga });
 
-  const [currenciesChecked, setCurrenciesChecked] = useState([]);
-  const [currencies, setCurrencies] = useState([CURRENCIES[0], CURRENCIES[1]]);
+  const [currencySelected, setCurrencySelected] = useState(null);
+  const [currencies, setCurrencies] = useState(null);
+  const [isCurrencyLoading, setCurrencyLoading] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCurrencies([CURRENCIES[0], CURRENCIES[1]]);
+    }, 500);
+  }, []);
 
   // const auth = useAuth();
-  const classes = useStyles();
+  const classes = useStyles(theme);
 
-  const handleToggle = id => {
-    if (currenciesChecked.indexOf(id) !== -1) {
-      return setCurrenciesChecked([
-        ...currenciesChecked.filter(currency => currency !== id),
-      ]);
-    }
-    setCurrenciesChecked([...currenciesChecked, id]);
+  const handleSelectCurrency = id => {
+    if (id === currencySelected) return setCurrencySelected(null);
+
+    setCurrencySelected(id);
+    setCurrencyLoading(true);
+    setTimeout(() => {
+      setCurrencyLoading(false);
+    }, 2000);
   };
 
   const addCurrency = id => {
@@ -103,63 +165,67 @@ export function ProfilePage() {
         <title>ProfilePage</title>
         <meta name="description" content="Description of ProfilePage" />
       </Helmet>
+
       <ProfileHeader
         addCurrency={addCurrency}
         removeCurrency={removeCurrency}
         currencies={CURRENCIES}
       />
-      <Card className={classes.card}>
-        <CardHeader title="Your currencies" />
-        <CardContent className={classes.cardContent}>
-          <List>
-            {currencies.map(({ id, title, rate }) => {
-              const value = id;
-              const labelId = `currency-list-title-${id}`;
-              return (
+      <div className={classes.body}>
+        <Container maxWidth="sm">
+          <Grid container>
+            <Grid item xs={12}>
+              <Card className={classes.card}>
                 <motion.div
-                  initial={{ x: 200 }}
-                  animate={{ x: 0 }}
-                  transition={{
-                    ease: 'easeOut',
-                    duration: 0.1,
-                    type: 'spring',
-                    stiffness: 260,
-                    damping: 20,
-                  }}
+                  animate={currencySelected ? 'hide' : 'show'}
+                  variants={cardHeaderVariants}
                 >
-                  <ListItem
-                    key={value}
-                    role={undefined}
-                    dense
-                    button
-                    onClick={() => handleToggle(id)}
-                  >
-                    <ListItemIcon>
-                      <Checkbox
-                        edge="start"
-                        checked={currenciesChecked.indexOf(id) !== -1}
-                        tabIndex={-1}
-                        disableRipple
-                        inputProps={{ 'aria-labelledby': labelId }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText id={labelId} primary={`${title}`} />
-                    <ListItemText
-                      primaryTypographyProps={{ variant: 'h4' }}
-                      primary={`${rate}`}
-                      style={{
-                        marginRight: 0,
-                        width: 'auto',
-                        flex: '0 0 auto',
-                      }}
-                    />
-                  </ListItem>
+                  <CardContent className={classes.cardContent}>
+                    <Typography variant="h6" color="textSecondary">
+                      Your Currencies
+                    </Typography>
+                  </CardContent>
                 </motion.div>
-              );
-            })}
-          </List>
-        </CardContent>
-      </Card>
+                <motion.div
+                  animate={currencySelected ? 'show' : 'hide'}
+                  variants={backBtnVariants}
+                >
+                  <CardContent className={classes.cardContent}>
+                    <IconButton onClick={() => setCurrencySelected(null)}>
+                      <ArrowBack />
+                    </IconButton>
+                  </CardContent>
+                </motion.div>
+                <List>
+                  {!Array.isArray(currencies)
+                    ? [1, 2, 3].map(item => (
+                        <ListItemLoader
+                          key={item}
+                          className={classes.skeleton}
+                        />
+                      ))
+                    : currencies.map(currency => {
+                        if (
+                          currencySelected &&
+                          currency.id !== currencySelected
+                        )
+                          return null;
+                        return (
+                          <ProfileCurrencyItem
+                            currency={currency}
+                            onClick={handleSelectCurrency}
+                            key={currency.id}
+                            withDetails={currencySelected}
+                            isLoadingDetails={isCurrencyLoading}
+                          />
+                        );
+                      })}
+                </List>
+              </Card>
+            </Grid>
+          </Grid>
+        </Container>
+      </div>
     </div>
   );
 }
