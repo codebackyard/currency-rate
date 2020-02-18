@@ -16,9 +16,27 @@ const express_1 = __importDefault(require("express"));
 const compression_1 = __importDefault(require("compression"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const morgan_1 = __importDefault(require("morgan"));
+const mongoose_1 = __importDefault(require("mongoose"));
+const bluebird_1 = __importDefault(require("bluebird"));
+const secrets_1 = require("./util/secrets");
 const app = express_1.default();
 app.set('port', process.env.PORT || 3000);
 app.use(morgan_1.default(':method :url :status :res[content-length] - :response-time ms'));
+const mongoUrl = secrets_1.MONGODB_URI;
+mongoose_1.default.Promise = bluebird_1.default;
+mongoose_1.default
+    .connect(mongoUrl, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true
+})
+    .then(() => {
+    /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
+})
+    .catch((err) => {
+    console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
+    // process.exit();
+});
 app.use(compression_1.default());
 app.use(body_parser_1.default.json());
 //app.use(bodyParser.urlencoded({ extended: true }));
