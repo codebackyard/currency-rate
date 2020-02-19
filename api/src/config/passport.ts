@@ -23,6 +23,9 @@ passport.use(
         return done(err);
       }
       user.comparePassword(password, (err: Error, isMatch: boolean) => {
+        console.log(user);
+        console.log(isMatch);
+
         if (err) {
           return done(err);
         }

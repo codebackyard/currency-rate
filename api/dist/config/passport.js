@@ -22,6 +22,8 @@ passport_1.default.use(new LocalStrategy({ usernameField: 'email' }, (email, pas
             return done(err);
         }
         user.comparePassword(password, (err, isMatch) => {
+            console.log(user);
+            console.log(isMatch);
             if (err) {
                 return done(err);
             }
