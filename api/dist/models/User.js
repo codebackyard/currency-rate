@@ -7,7 +7,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const bcrypt_nodejs_1 = __importDefault(require("bcrypt-nodejs"));
 const userSchema = new mongoose_1.default.Schema({
     email: { type: String, unique: true },
-    passowrd: { type: String },
+    password: { type: String },
     profile: {
         email: String
     }
@@ -18,18 +18,20 @@ userSchema.pre('save', function save(next) {
         if (err) {
             return next(err);
         }
-        bcrypt_nodejs_1.default.hash(user.passowrd, salt, undefined, (err, hash) => {
+        bcrypt_nodejs_1.default.hash(user.password, salt, undefined, (err, hash) => {
             if (err) {
                 return next(err);
             }
-            user.passowrd = hash;
+            user.password = hash;
             return next();
         });
     });
 });
 const comparePassword = function (candidatePassword, cb) {
+    console.log(candidatePassword);
+    console.log(this.password);
     if (this.password != null) {
-        bcrypt_nodejs_1.default.compare(candidatePassword, this.passowrd, (err, isMatch) => {
+        bcrypt_nodejs_1.default.compare(candidatePassword, this.password, (err, isMatch) => {
             console.log(`its match? ${isMatch}`);
             cb(err, isMatch);
         });

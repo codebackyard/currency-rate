@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const passport_1 = __importDefault(require("passport"));
 const express_validator_1 = require("express-validator");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("../config/passport");
 const User_1 = require("../models/User");
 exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -28,7 +29,7 @@ exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         console.log(errors);
         return res.json(errors);
     }
-    passport_1.default.authenticate('local', (err, user, info) => {
+    passport_1.default.authenticate('local', { session: false }, (err, user, info) => {
         console.log(`this  is: ${err} / ${info} / ${user}`);
         if (err) {
             return next(err);
@@ -41,7 +42,8 @@ exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             if (err) {
                 return next(err);
             }
-            return res.json(user);
+            const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, 'secrete');
+            return res.json({ user, token });
         });
     })(req, res, next);
 });
