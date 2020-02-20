@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt-nodejs';
 
 export type UserDocument = mongoose.Document & {
   email: string;
-  passowrd: string;
+  password: string;
   tokens: AuthToken[];
   comparePassword: comparePasswordFunction;
 };
@@ -20,7 +20,7 @@ type comparePasswordFunction = (
 const userSchema = new mongoose.Schema(
   {
     email: { type: String, unique: true },
-    passowrd: { type: String },
+    password: { type: String },
     profile: {
       email: String
     }
@@ -34,11 +34,11 @@ userSchema.pre('save', function save(next) {
     if (err) {
       return next(err);
     }
-    bcrypt.hash(user.passowrd, salt, undefined, (err: mongoose.Error, hash) => {
+    bcrypt.hash(user.password, salt, undefined, (err: mongoose.Error, hash) => {
       if (err) {
         return next(err);
       }
-      user.passowrd = hash;
+      user.password = hash;
       return next();
     });
   });
@@ -48,10 +48,13 @@ const comparePassword: comparePasswordFunction = function(
   candidatePassword,
   cb
 ) {
+  console.log(candidatePassword);
+  console.log(this.password);
+
   if (this.password != null) {
     bcrypt.compare(
       candidatePassword,
-      this.passowrd,
+      this.password,
       (err: mongoose.Error, isMatch: Boolean) => {
         console.log(`its match? ${isMatch}`);
         cb(err, isMatch);

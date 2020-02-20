@@ -7,6 +7,8 @@ import mongoose from 'mongoose';
 import bluebird from 'bluebird';
 import { MONGODB_URI } from './util/secrets';
 import * as userController from './controllers/user';
+import * as passportConfig from './config/passport';
+import passport from 'passport';
 const app = express();
 app.set('port', process.env.PORT || 3000);
 app.use(
@@ -33,15 +35,15 @@ mongoose
 
 app.use(compression());
 app.use(bodyParser.json());
+app.use(passport.initialize());
+app.use(passport.session());
 //app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(flash());
 
-app.get('/good', async (req: express.Request, res: express.Response) => {
-  res.json({ ok: 'ok' });
-});
-
 app.post('/login', userController.postLogin);
 app.post('/signup', userController.postSignup);
-
+app.get('/good', passport.authenticate('jwt'{session: false}), async (req, res, next) => {
+  res.json({ ok: 'ok' });
+});
 export default app;

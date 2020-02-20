@@ -1,5 +1,6 @@
 import passport from 'passport';
 import passportLocal from 'passport-local';
+import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
 import _ from 'lodash';
 import { User, UserDocument } from '../models/User';
 import { Request, Response, NextFunction } from 'express';
@@ -38,6 +39,28 @@ passport.use(
   })
 );
 
+const jwtOpts = {
+  secretOrKey: 'secrete',
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+};
+
+passport.use(
+  new JWTStrategy(jwtOpts, function(jwt_payload, done) {
+    console.log(jwt_payload);
+
+    User.findOne({ id: jwt_payload.sub }, function(err, user) {
+      if (err) {
+        return done(err, false);
+      }
+      if (user) {
+        return done(null, user);
+      } else {
+        return done(null, false);
+      }
+    });
+  })
+);
+
 export const isAuthenticated = (
   req: Request,
   res: Response,
@@ -46,7 +69,7 @@ export const isAuthenticated = (
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/login');
+  res.json({ msg: 'you are not authenticated' });
 };
 
 export const isAuthorized = (

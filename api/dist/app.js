@@ -28,6 +28,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const bluebird_1 = __importDefault(require("bluebird"));
 const secrets_1 = require("./util/secrets");
 const userController = __importStar(require("./controllers/user"));
+const passport_1 = __importDefault(require("passport"));
 const app = express_1.default();
 app.set('port', process.env.PORT || 3000);
 app.use(morgan_1.default(':method :url :status :res[content-length] - :response-time ms'));
@@ -48,12 +49,14 @@ mongoose_1.default
 });
 app.use(compression_1.default());
 app.use(body_parser_1.default.json());
+app.use(passport_1.default.initialize());
+app.use(passport_1.default.session());
 //app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express_flash_1.default());
-app.get('/good', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json({ ok: 'ok' });
-}));
 app.post('/login', userController.postLogin);
 app.post('/signup', userController.postSignup);
+app.get('/good', passport_1.default.authenticate('jwt', { session: false }), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    res.json({ ok: 'ok' });
+}));
 exports.default = app;
 //# sourceMappingURL=app.js.map

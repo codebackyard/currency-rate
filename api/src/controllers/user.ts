@@ -1,7 +1,8 @@
 import passport from 'passport';
-import { check, sanitize, validationResult } from 'express-validator';
+import { check, validationResult } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
 import { IVerifyOptions } from 'passport-local';
+import jwt from 'jsonwebtoken';
 
 import '../config/passport';
 import { User, UserDocument, AuthToken } from '../models/User';
@@ -26,6 +27,7 @@ export const postLogin = async (
   }
   passport.authenticate(
     'local',
+    { session: false },
     (err: Error, user: UserDocument, info: IVerifyOptions) => {
       console.log(`this  is: ${err} / ${info} / ${user}`);
       if (err) {
@@ -40,7 +42,8 @@ export const postLogin = async (
         if (err) {
           return next(err);
         }
-        return res.json(user);
+        const token = jwt.sign({ id: user.id, email: user.email }, 'secrete');
+        return res.json({ user, token });
       });
     }
   )(req, res, next);
