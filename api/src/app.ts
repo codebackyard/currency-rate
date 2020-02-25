@@ -8,6 +8,8 @@ import bluebird from 'bluebird';
 import { MONGODB_URI } from './util/secrets';
 import * as userController from './controllers/user';
 import * as passportConfig from './config/passport';
+import * as countryController from './controllers/country';
+
 import passport from 'passport';
 const app = express();
 app.set('port', process.env.PORT || 3000);
@@ -50,5 +52,9 @@ app.get(
     res.json({ ok: 'ok' });
   }
 );
-
+app.get(
+  '/country',
+  passport.authenticate('jwt', { session: false }),
+  countryController.queryCurrency
+);
 export default app;

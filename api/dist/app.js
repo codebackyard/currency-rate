@@ -28,6 +28,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const bluebird_1 = __importDefault(require("bluebird"));
 const secrets_1 = require("./util/secrets");
 const userController = __importStar(require("./controllers/user"));
+const countryController = __importStar(require("./controllers/country"));
 const passport_1 = __importDefault(require("passport"));
 const app = express_1.default();
 app.set('port', process.env.PORT || 3000);
@@ -58,5 +59,6 @@ app.post('/signup', userController.postSignup);
 app.get('/good', passport_1.default.authenticate('jwt', { session: false }), (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     res.json({ ok: 'ok' });
 }));
+app.get('/country', passport_1.default.authenticate('jwt', { session: false }), countryController.queryCurrency);
 exports.default = app;
 //# sourceMappingURL=app.js.map
