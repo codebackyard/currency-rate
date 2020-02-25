@@ -8,6 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.queryCurrency = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () { });
-//# sourceMappingURL=currency.js.map
+const axios_1 = __importDefault(require("axios"));
+const COUNTRY_URL = 'https://restcountries.eu/rest/v2/all';
+exports.GetCountries = () => __awaiter(void 0, void 0, void 0, function* () {
+    return axios_1.default.get(COUNTRY_URL);
+});
+//# sourceMappingURL=actions.js.map

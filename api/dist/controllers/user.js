@@ -29,6 +29,7 @@ exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         console.log(errors);
         return res.json(errors);
     }
+    console.log('here');
     passport_1.default.authenticate('local', { session: false }, (err, user, info) => {
         console.log(`this  is: ${err} / ${info} / ${user}`);
         if (err) {

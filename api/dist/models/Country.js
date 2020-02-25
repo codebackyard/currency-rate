@@ -4,11 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const currencySchema = new mongoose_1.default.Schema({
+const countrySchema = new mongoose_1.default.Schema({
     name: { type: String },
-    code: { type: String, unique: true, index: true }
+    code: { type: String },
+    timezones: { type: [String] },
+    region: String,
+    currency: {
+        code: String,
+        name: String
+    }
 }, {
     timestamps: true
 });
-exports.Currency = mongoose_1.default.model('Currency', currencySchema);
-//# sourceMappingURL=Currency.js.map
+exports.Country = mongoose_1.default.model('Country', countrySchema);
+//# sourceMappingURL=Country.js.map
