@@ -43,7 +43,12 @@ app.use(flash());
 
 app.post('/login', userController.postLogin);
 app.post('/signup', userController.postSignup);
-app.get('/good', passport.authenticate('jwt'{session: false}), async (req, res, next) => {
-  res.json({ ok: 'ok' });
-});
+app.get(
+  '/good',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    res.json({ ok: 'ok' });
+  }
+);
+
 export default app;

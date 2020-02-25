@@ -18,6 +18,7 @@ passport_1.default.deserializeUser((id, done) => {
     });
 });
 passport_1.default.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+    console.log('noooo');
     User_1.User.findOne({ email: email.toLowerCase() }, (err, user) => {
         if (err) {
             return done(err);

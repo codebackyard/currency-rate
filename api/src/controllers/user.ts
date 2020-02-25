@@ -25,6 +25,7 @@ export const postLogin = async (
     console.log(errors);
     return res.json(errors);
   }
+  console.log('here');
   passport.authenticate(
     'local',
     { session: false },
