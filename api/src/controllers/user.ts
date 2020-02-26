@@ -22,7 +22,6 @@ export const postLogin = async (
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    console.log(errors);
     return res.json(errors);
   }
   console.log('here');
@@ -30,7 +29,6 @@ export const postLogin = async (
     'local',
     { session: false },
     (err: Error, user: UserDocument, info: IVerifyOptions) => {
-      console.log(`this  is: ${err} / ${info} / ${user}`);
       if (err) {
         return next(err);
       }
@@ -38,7 +36,6 @@ export const postLogin = async (
         return res.json(info.message);
       }
 
-      console.log(`authenticated succeed: ${user}`);
       req.logIn(user, (err) => {
         if (err) {
           return next(err);
@@ -73,12 +70,10 @@ export const postSignup = async (
   const user = new User({ email: req.body.email, password: req.body.password });
 
   const existingUser = await User.findOne({ email: req.body.email });
-  console.log(existingUser);
 
   if (existingUser) {
     return res.json({ message: 'Email already registered' });
   }
   await user.save();
-  console.log(user);
   return res.json(user);
 };

@@ -26,19 +26,16 @@ exports.postLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         .run(req);
     const errors = express_validator_1.validationResult(req);
     if (!errors.isEmpty()) {
-        console.log(errors);
         return res.json(errors);
     }
     console.log('here');
     passport_1.default.authenticate('local', { session: false }, (err, user, info) => {
-        console.log(`this  is: ${err} / ${info} / ${user}`);
         if (err) {
             return next(err);
         }
         if (!user) {
             return res.json(info.message);
         }
-        console.log(`authenticated succeed: ${user}`);
         req.logIn(user, (err) => {
             if (err) {
                 return next(err);
@@ -64,12 +61,10 @@ exports.postSignup = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
     const user = new User_1.User({ email: req.body.email, password: req.body.password });
     const existingUser = yield User_1.User.findOne({ email: req.body.email });
-    console.log(existingUser);
     if (existingUser) {
         return res.json({ message: 'Email already registered' });
     }
     yield user.save();
-    console.log(user);
     return res.json(user);
 });
 //# sourceMappingURL=user.js.map

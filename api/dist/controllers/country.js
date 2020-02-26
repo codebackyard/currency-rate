@@ -10,21 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Country_1 = require("../models/Country");
-const actions_1 = require("../actions");
 exports.queryCurrency = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { data } = yield actions_1.GetCountries();
-    console.log(`the number is: ${data.length}`);
-    yield Promise.all(data.map((c) => __awaiter(void 0, void 0, void 0, function* () {
-        const exist = yield Country_1.Country.findOne({ name: c.name });
-        if (!exist) {
-            yield Country_1.Country.create({
-                name: c.name,
-                region: c.region,
-                timezones: c.timezones,
-                currency: { name: c.currencies[0].name, code: c.currencies[0].code }
-            });
-        }
-    })));
+    const { name = '' } = req.query;
+    const data = yield Country_1.Country.find({
+        name: { $regex: '.*' + name + '.*', $options: 'i' }
+    }).limit(5);
     res.json(data);
 });
 //# sourceMappingURL=country.js.map

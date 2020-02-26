@@ -18,14 +18,11 @@ passport_1.default.deserializeUser((id, done) => {
     });
 });
 passport_1.default.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-    console.log('noooo');
     User_1.User.findOne({ email: email.toLowerCase() }, (err, user) => {
         if (err) {
             return done(err);
         }
         user.comparePassword(password, (err, isMatch) => {
-            console.log(user);
-            console.log(isMatch);
             if (err) {
                 return done(err);
             }
@@ -41,7 +38,6 @@ const jwtOpts = {
     jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken()
 };
 passport_1.default.use(new passport_jwt_1.Strategy(jwtOpts, function (jwt_payload, done) {
-    console.log(jwt_payload);
     User_1.User.findOne({ id: jwt_payload.sub }, function (err, user) {
         if (err) {
             return done(err, false);

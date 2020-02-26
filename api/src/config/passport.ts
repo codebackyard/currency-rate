@@ -19,16 +19,11 @@ passport.deserializeUser((id, done) => {
 
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-    console.log('noooo');
-
     User.findOne({ email: email.toLowerCase() }, (err, user: any) => {
       if (err) {
         return done(err);
       }
       user.comparePassword(password, (err: Error, isMatch: boolean) => {
-        console.log(user);
-        console.log(isMatch);
-
         if (err) {
           return done(err);
         }
@@ -48,8 +43,6 @@ const jwtOpts = {
 
 passport.use(
   new JWTStrategy(jwtOpts, function(jwt_payload, done) {
-    console.log(jwt_payload);
-
     User.findOne({ id: jwt_payload.sub }, function(err, user) {
       if (err) {
         return done(err, false);
