@@ -10,6 +10,10 @@ export const initialState = {
   isLoading: false,
   email: '',
   password: '',
+  auth: {
+    isAuth: false,
+    user: null,
+  },
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -26,7 +30,13 @@ const loginPageReducer = (state = initialState, action) =>
         draft.isLoading = true;
         break;
       case Actions.LOGIN.SUCCEED:
+        console.log('action: ', action);
         draft.isLoading = false;
+        draft.auth = {
+          isAuth: true,
+          user: action.user,
+        };
+        console.log('draft: ', draft);
         break;
       case Actions.LOGIN.FAILED:
         draft.isLoading = false;
